@@ -1,11 +1,13 @@
 #!/bin/sh
 
 #Get optional arguments
-while getopts ":d:u:n:h" o; do case "${o}" in
-	h) printf "Optional Arguments: \\n -h: Display this message\\n -d: specify Disk to install to\\n -n: specify hostname\\n -u: specify username" && exit ;;
+while getopts ":d:u:n:p:r:h" o; do case "${o}" in
+	h) printf "Optional Arguments: \\n -h: Display this message\\n -d: specify Disk to install to\\n -n: specify hostname\\n -u: specify username\\n -r: specify root password\\n -p: specify user password" && exit ;;
 	d) DISK=${OPTARG} ;;
 	n) HOSTN=${OPTARG} ;;
 	u) USERN=${OPTARG} ;;
+	r) ROOTPW=${OPTARG} ;;
+	p) USERPW=${OPTARG} ;;
 	*) printf "Invalid Arguments" && exit ;;
 esac done
 
@@ -13,6 +15,8 @@ esac done
 [ -z "$DISK" ] && DISK="/dev/sda"
 [ -z "$HOSTN" ] && HOSTN="krypton"
 [ -z "$USERN" ] && USERN="gabriel"
+[ -z "$ROOTPW" ] && ROOTPW=$(dialog --no-cancel --passwordbox "Enter root password" 10 60 3>&1 1>&2 2>&3 3>&1)
+[ -z "$USERPW" ] && USERPW=$(dialog --no cancel --passwordbox "Enter password for $USERN" 10 60 3>&1 1>&2 2>&3 3>&1)
 
 partition() {
 	parted -s "$DISK" mklabel gpt mkpart primary fat32 1MiB 261MiB set 1 esp on mkpart primary ext4 261MiB 100%
@@ -28,6 +32,27 @@ createSwap() {
 	swapon /mnt/swapfile
 }
 
+installBase() {
+	pacstrap /mnt base linux linux-firmware pacman-contrib sudo zsh
+	mv /mnt/etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist.bak
+	/mnt/usr/bin/rankmirrors -n 6 /mnt/etc/pacman.d/mirrorlist.bak > /mnt/etc/pacman.d/mirrorlist
+}
+
+chrootTasks() {
+	ln -sf /mnt/usr/share/zoneinfo/Europe/Berlin /mnt/etc/localtime
+	arch-chroot /mnt hwclock --systohc
+	sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /mnt/etc/locale.gen
+	arch-chroot /mnt locale-gen
+	echo en_US.UTF-8 > /mnt/etc/locale.conf
+	echo "$HOSTN" > /mnt/etc/hostname
+	arch-chroot /mnt echo -e "${ROOTPW}\n${ROOTPW}" | passwd
+	arch-chroot /mnt useradd -m -g wheel -s /usr/bin/zsh "$USERN"
+	arch-chroot /mnt usermod -a -G wheel "$USERN"
+	mkdir -p /mnt/home/"$USERN"
+	arch-chroot /mnt chown -R "$USERN":wheel /home/"$USERN"
+	arch-chroot /mnt echo "$USERN:$USERPW" | chpasswd
+}
+
 install() {
 	#Set Systemclock
 	timedatectl set-ntp true
@@ -41,6 +66,10 @@ install() {
 	#Create Swapfile
 	createSwap
 
+	installBase
 
+	chrootTasks
 
 }
+
+install
