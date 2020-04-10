@@ -35,6 +35,7 @@ createSwap() {
 installBase() {
 	pacstrap /mnt base linux linux-firmware pacman-contrib sudo zsh
 	mv /mnt/etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist.bak
+	printf "Ranking Mirrors..."
 	/mnt/usr/bin/rankmirrors -n 6 /mnt/etc/pacman.d/mirrorlist.bak > /mnt/etc/pacman.d/mirrorlist
 }
 
@@ -50,7 +51,16 @@ chrootTasks() {
 	arch-chroot /mnt usermod -a -G wheel "$USERN"
 	mkdir -p /mnt/home/"$USERN"
 	arch-chroot /mnt chown -R "$USERN":wheel /home/"$USERN"
-	arch-chroot /mnt echo "$USERN:$USERPW" | chpasswd
+	arch-chroot /mnt echo -e "$USERN\n$USERPW" | passwd
+	sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/g' /mnt/etc/sudoers
+
+}
+
+installBootloader() {
+	arch-chroot /mnt bootctl --path=/boot install
+	echo "default arch-*" > /mnt/boot/loader/loader.conf
+	echo 'title\tArch Linux\nlinux\tvmlinuz-linux\ninitrd\t/initramfs-linux.img\noptions\troot="LABEL=${DISK}2" rw' > /mnt/boot/loader/entries/arch.conf
+
 }
 
 install() {
@@ -68,7 +78,12 @@ install() {
 
 	installBase
 
+	#Generate FSTab
+	genfstab -L /mnt >> /mnt/etc/fstab
+
 	chrootTasks
+
+	installBootloader
 
 }
 
