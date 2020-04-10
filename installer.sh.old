@@ -1,0 +1,29 @@
+dialog --title "Info" --msgbox "This Script will now install the system and rice it." 0 0 3>&1 1>&2 2>&3 3>&1
+
+
+hostname=$(dialog --inputbox "Please enter a hostname for this machine." 0 0 3>&1 1>&2 2>&3 3>&1);
+while ! echo "$hostname" | grep "^[a-z_][a-z0-9_-]*$" >/dev/null 2>&1; do
+	hostname=$(dialog --no-cancel --inputbox "Hostname invalid. Please enter a hostname for this machine." 0 0 3>&1 1>&2 2>&3 3>&1)
+done
+name=$(dialog --no-cancel --inputbox "Please enter your username." 0 0 3>&1 1>&2 2>&3 3>&1);
+
+
+while ! echo "$hostname" | grep "^[a-z_][a-z0-9_-]*$" >/dev/null 2>&1; do
+           hostname=$(dialog --no-cancel --inputbox "Username invalid. Please enter your username." 0 0 3>&1 1>&2 2>&3 3>&1)
+done
+
+
+pass1=$(dialog --no-cancel --passwordbox "Enter a password for that user." 10 60 3>&1 1>&2 2>&3 3>&1)
+pass2=$(dialog --no-cancel --passwordbox "Retype password." 10 60 3>&1 1>&2 2>&3 3>&1)
+
+while ! [ "$pass1" = "$pass2" ]; do
+	unset pass2
+	pass1=$(dialog --no-cancel --passwordbox "Passwords do not match.\\n\\nEnter password again." 10 60 3>&1 1>&2 2>&3 3>&1)
+	pass2=$(dialog --no-cancel --passwordbox "Retype password." 10 60 3>&1 1>&2 2>&3 3>&1)
+done ;}
+
+
+useradd -m -g wheel -s /bin/bash/ "$name" >/dev/null 2>&1 ||
+usermod -a -G wheel "$name" && mkdir -p /home/"$name" && chown "$name":wheel /home/"$name"
+echo "$name:$pass1" | chpasswd
+unset pass1 pass2 ;}
