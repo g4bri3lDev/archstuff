@@ -33,7 +33,7 @@ createSwap() {
 }
 
 installBase() {
-	pacstrap /mnt base linux linux-firmware pacman-contrib sudo zsh
+	pacstrap /mnt base linux linux-firmware pacman-contrib sudo zsh dhcpcd
 	mv /mnt/etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist.bak
 	printf "Ranking Mirrors..."
 	/mnt/usr/bin/rankmirrors -n 6 /mnt/etc/pacman.d/mirrorlist.bak > /mnt/etc/pacman.d/mirrorlist
@@ -44,22 +44,23 @@ chrootTasks() {
 	arch-chroot /mnt hwclock --systohc
 	sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /mnt/etc/locale.gen
 	arch-chroot /mnt locale-gen
-	echo en_US.UTF-8 > /mnt/etc/locale.conf
+	echo LANG=en_US.UTF-8 > /mnt/etc/locale.conf
 	echo "$HOSTN" > /mnt/etc/hostname
-	arch-chroot /mnt echo -e "${ROOTPW}\n${ROOTPW}" | passwd
+	arch-chroot /mnt echo "root:$ROOTPW" | chpasswd
 	arch-chroot /mnt useradd -m -g wheel -s /usr/bin/zsh "$USERN"
 	arch-chroot /mnt usermod -a -G wheel "$USERN"
 	mkdir -p /mnt/home/"$USERN"
 	arch-chroot /mnt chown -R "$USERN":wheel /home/"$USERN"
-	arch-chroot /mnt echo -e "$USERN\n$USERPW" | passwd
+	arch-chroot /mnt echo "$USERN:$USERPW" | chpasswd
 	sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/g' /mnt/etc/sudoers
+	arch-chroot /mnt systemctl enable dhcpcd
 
 }
 
 installBootloader() {
 	arch-chroot /mnt bootctl --path=/boot install
 	echo "default arch-*" > /mnt/boot/loader/loader.conf
-	echo 'title\tArch Linux\nlinux\tvmlinuz-linux\ninitrd\t/initramfs-linux.img\noptions\troot="LABEL=${DISK}2" rw' > /mnt/boot/loader/entries/arch.conf
+	echo -e 'title\tArch Linux\nlinux\tvmlinuz-linux\ninitrd\t/initramfs-linux.img\noptions\troot="LABEL=${DISK}2" rw' > /mnt/boot/loader/entries/arch.conf
 
 }
 
