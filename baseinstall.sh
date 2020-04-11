@@ -60,7 +60,7 @@ chrootTasks() {
 installBootloader() {
 	arch-chroot /mnt bootctl --path=/boot install
 	echo "default arch-*" > /mnt/boot/loader/loader.conf
-	echo -e 'title\tArch Linux\nlinux\tvmlinuz-linux\ninitrd\t/initramfs-linux.img\noptions\troot="LABEL=${DISK}2" rw' > /mnt/boot/loader/entries/arch.conf
+	echo -e "title\tArch Linux\nlinux\tvmlinuz-linux\ninitrd\t/initramfs-linux.img\noptions\troot=${DISK}2 rw" > /mnt/boot/loader/entries/arch.conf
 
 }
 
