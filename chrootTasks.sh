@@ -27,4 +27,6 @@ chmod +x deployDots.sh
 chown -R $USERN /home/$USERN/
 xdg-user-dirs-update
 su gabriel -c xdg-user-dirs-update
-su gabriel -c sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -o install.sh
+chmod +x install.sh
+su gabriel -c ./install.sh --unattended
