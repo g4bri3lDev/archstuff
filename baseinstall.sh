@@ -33,7 +33,7 @@ createSwap() {
 }
 
 installBase() {
-	pacstrap /mnt base linux linux-firmware pacman-contrib base-devel zsh dhcpcd xdg-user-dirs git
+	pacstrap /mnt base linux linux-firmware pacman-contrib base-devel zsh dhcpcd xdg-user-dirs git wget
 	mv /mnt/etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist.bak
 	printf "Ranking Mirrors..."
 	/mnt/usr/bin/rankmirrors -n 4 /mnt/etc/pacman.d/mirrorlist.bak > /mnt/etc/pacman.d/mirrorlist
