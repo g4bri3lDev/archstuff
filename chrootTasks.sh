@@ -15,9 +15,8 @@ hwclock --systohc
 sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
 locale-gen
 echo "$HOSTN" > /etc/hostname
-echo "root:$rootpasswd" | chpasswd
+echo "root:$ROOTPW" | chpasswd
 useradd -m -g wheel -s /usr/bin/zsh "$USERN"
 echo "$USERN:$USERPW" | chpasswd
 sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/g' /mnt/etc/sudoers
 systemctl enable dhcpcd
-xdg-user-dirs-update

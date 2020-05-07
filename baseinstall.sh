@@ -33,7 +33,7 @@ createSwap() {
 }
 
 installBase() {
-	pacstrap /mnt base linux linux-firmware pacman-contrib base-devel zsh dhcpcd xdg-user-dirs
+	pacstrap /mnt base linux linux-firmware pacman-contrib base-devel zsh dhcpcd xdg-user-dirs git
 	mv /mnt/etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist.bak
 	printf "Ranking Mirrors..."
 	/mnt/usr/bin/rankmirrors -n 6 /mnt/etc/pacman.d/mirrorlist.bak > /mnt/etc/pacman.d/mirrorlist
@@ -41,7 +41,7 @@ installBase() {
 
 chrootTasks() {
 	chmod +x chrootTasks.sh
-	arch-chroot /mnt chrootTasks.sh -n "$HOSTN" -u "$USERN" -r "$ROOTPW" -p "$USERPW"
+	arch-chroot /mnt ./chrootTasks.sh -n "$HOSTN" -u "$USERN" -r "$ROOTPW" -p "$USERPW"
 #	ln -sf /mnt/usr/share/zoneinfo/Europe/Berlin /mnt/etc/localtime
 #	arch-chroot /mnt hwclock --systohc
 #	sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /mnt/etc/locale.gen
