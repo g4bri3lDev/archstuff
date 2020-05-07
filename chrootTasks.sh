@@ -21,6 +21,6 @@ echo "$USERN:$USERPW" | chpasswd
 sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/g' /etc/sudoers
 systemctl enable dhcpcd
 
-wget https://raw.githubusercontent.com/g4bri3lDev/archstuff/master/deployDots.sh
+curl https://raw.githubusercontent.com/g4bri3lDev/archstuff/master/deployDots.sh -o deployDots.sh
 chmod +x deployDots.sh
 ./deployDots.sh $USERN
