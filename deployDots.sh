@@ -1,6 +1,11 @@
 #!/bin/bash
+
+USERN=$1
+git clone https://github.com/g4bri3lDev/dotfiles.git "/home/$USERN/Documents/dotfiles"
+
 shopt -s dotglob
-for file in ~/dotfiles/*
+rm -rf "/home/$USERN/.*"
+for file in "/home/$USERN/Documents/dotfiles/*"
 do
-	 echo "$file"
+	 ln -sf "/home/$USERN/Documents/dotfiles/$file" "/home/$USERN/$file"
  done
