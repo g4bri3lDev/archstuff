@@ -24,3 +24,4 @@ systemctl enable dhcpcd
 curl https://raw.githubusercontent.com/g4bri3lDev/archstuff/master/deployDots.sh -o deployDots.sh
 chmod +x deployDots.sh
 ./deployDots.sh $USERN
+su gabriel -c xdg-user-dirs-update

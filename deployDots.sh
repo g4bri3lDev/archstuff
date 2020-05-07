@@ -7,5 +7,5 @@ shopt -s dotglob
 rm -rf /home/$USERN/.*
 for file in /home/$USERN/Documents/dotfiles/* ;
 do
-	 ln -sf /home/$USERN/Documents/dotfiles/$file -t /home/$USERN/
+	 ln -sf $file -t /home/$USERN/
  done
