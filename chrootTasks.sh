@@ -25,8 +25,4 @@ curl https://raw.githubusercontent.com/g4bri3lDev/archstuff/master/deployDots.sh
 chmod +x deployDots.sh
 ./deployDots.sh $USERN
 chown -R $USERN /home/$USERN/
-xdg-user-dirs-update
 su gabriel -c xdg-user-dirs-update
-curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -o install.sh
-chmod +x install.sh
-su gabriel -c ./install.sh --unattended
