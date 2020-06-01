@@ -21,10 +21,10 @@ echo "$USERN:$USERPW" | chpasswd
 sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/g' /etc/sudoers
 systemctl enable dhcpcd
 
-curl https://raw.githubusercontent.com/g4bri3lDev/archstuff/master/deployDots.sh -o deployDots.sh
-chmod +x deployDots.sh
-./deployDots.sh $USERN
-chown -R $USERN /home/$USERN/
+#curl https://raw.githubusercontent.com/g4bri3lDev/archstuff/master/deployDots.sh -o deployDots.sh
+#chmod +x deployDots.sh
+#./deployDots.sh $USERN
+#chown -R $USERN /home/$USERN/
 xdg-user-dirs-update
-su gabriel -c xdg-user-dirs-update
-su gabriel -c sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+su "$USERN" -c xdg-user-dirs-update
+#su gabriel -c sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
