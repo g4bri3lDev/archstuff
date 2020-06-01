@@ -37,9 +37,9 @@ installBase() {
 	[g4bri3l]
 	SigLevel = Optional TrustAll
 	Server = https://g4bri3l.de/arch-pkgs
-	EOF
+EOF
 
-	pacstrap /mnt base linux linux-firmware g4bri3l-full
+	pacstrap /mnt base base-devel linux linux-firmware g4bri3l-full
 	mv /mnt/etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist.bak
 	printf "Ranking Mirrors..."
 	/mnt/usr/bin/rankmirrors -n 4 /mnt/etc/pacman.d/mirrorlist.bak > /mnt/etc/pacman.d/mirrorlist
@@ -48,7 +48,7 @@ installBase() {
 	[g4bri3l]
 	SigLevel = Optional TrustAll
 	Server = https://g4bri3l.de/arch-pkgs
-	EOF
+EOF
 }
 
 installBootloader() {
