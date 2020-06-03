@@ -25,5 +25,5 @@ systemctl enable dhcpcd
 #./deployDots.sh $USERN
 #chown -R $USERN /home/$USERN/
 su "$USERN" -c xdg-user-dirs-update
-su "$USERN" -c git clone https://github.com/g4bri3lDev/dotfiles.git ~/.dotfiles
-su "$USERN" -c ~/.dotfiles/install
+su "$USERN" -c "git clone https://github.com/g4bri3lDev/dotfiles.git ~/.dotfiles"
+su "$USERN" -c "~/.dotfiles/install"
