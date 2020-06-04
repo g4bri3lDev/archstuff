@@ -33,7 +33,7 @@ createSwap() {
 }
 
 installBase() {
-	cat >>/etc/pacman.conf <<EOF
+	cat >/etc/pacman.conf <<EOF
 	[g4bri3l]
 	SigLevel = Optional TrustAll
 	Server = https://g4bri3l.de/arch-pkgs
@@ -44,7 +44,7 @@ EOF
 	printf "Ranking Mirrors..."
 	/mnt/usr/bin/rankmirrors -n 4 /mnt/etc/pacman.d/mirrorlist.bak > /mnt/etc/pacman.d/mirrorlist
 
-	cat >>/mnt/etc/pacman.conf <<EOF
+	cat >/mnt/etc/pacman.conf <<EOF
 	[g4bri3l]
 	SigLevel = Optional TrustAll
 	Server = https://g4bri3l.de/arch-pkgs
