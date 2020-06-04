@@ -18,7 +18,7 @@ echo "root:$ROOTPW" | chpasswd
 useradd -m -g wheel -s /usr/bin/zsh "$USERN"
 echo "$USERN:$USERPW" | chpasswd
 sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/g' /etc/sudoers
-systemctl enable dhcpcd
+systemctl enable NetworkManager
 
 #curl https://raw.githubusercontent.com/g4bri3lDev/archstuff/master/deployDots.sh -o deployDots.sh
 #chmod +x deployDots.sh
@@ -27,3 +27,4 @@ systemctl enable dhcpcd
 su "$USERN" -c xdg-user-dirs-update
 su - "$USERN" -c "git clone https://github.com/g4bri3lDev/dotfiles.git ~/.dotfiles"
 su - "$USERN" -c "~/.dotfiles/install"
+su - "$USERN" -c "wal -i ~/.dotfiles/wallpapers/wall.jpg"
